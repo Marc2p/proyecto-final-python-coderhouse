@@ -35,6 +35,33 @@ def libro(request, id): # Vista de un libro en particular
 		ctx = {'libro': libro}
 		return render(request, 'libro.html', ctx)
 
+def editar_libro(request, id): # Vista de editar un libro
+		libro = Libro.objects.get(id=id)
+		if request.method == 'POST':
+			form = LibroForm(request.POST)
+			if form.is_valid():
+				data = form.cleaned_data
+				libro.titulo = data['titulo']
+				libro.autor = data['autor']
+				libro.idioma = data['idioma']
+				libro.fecha_publicacion = data['fecha_publicacion']
+				libro.sinopsis = data['sinopsis']
+				libro.save()
+				libro.genero.set(data['genero'])
+				return redirect('libro', id=id)
+		ctx = {
+			'id': id,
+			'form': LibroForm(initial={
+				'titulo': libro.titulo,
+				'autor': libro.autor,
+				'idioma': libro.idioma,
+				'fecha_publicacion': libro.fecha_publicacion.strftime('%Y-%m-%d'),
+				'sinopsis': libro.sinopsis,
+				'genero': libro.genero.all(),
+			}
+		)}
+		return render(request, 'editar_libro.html', ctx)
+
 def autores(request): # Vista general de autores
 		autores = Autor.objects.all().order_by('nombre')
 		paginator = Paginator(autores, 10)

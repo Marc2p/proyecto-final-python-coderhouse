@@ -11,11 +11,12 @@
 				<th>Fecha de publicación</th>
 				<th>Género</th>
 				<th>Sinopsis</th>
+				<th>Eliminar</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
-				<td>{{ libro.titulo }}</td>
+				<td><a href="{% url 'editar_libro' libro.id %}">{{ libro.titulo }}</a></td>
 				<td>{{ libro.autor }}</td>
 				<td>{{ libro.idioma }}</td>
 				<td>{{ libro.fecha_publicacion }}</td>

@@ -16,7 +16,7 @@
 			<tbody>
 				{% for libro in paginador %}
 					<tr>
-						<td>{{ libro.titulo }}</td>
+						<td><a href="{%url 'libro' libro.id%}">{{ libro.titulo }}</a></td>
 						<td>{{ libro.idioma }}</td>
 						<td>{{ libro.fecha_publicacion }}</td>
 						<td>{{ libro.genero.all|join:", " }}</td>
