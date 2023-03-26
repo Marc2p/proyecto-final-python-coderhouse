@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Editar libro</h1>
+<h1>Editar libro: {{ titulo }}</h1>
 <form action="{% url 'editar_libro' id %}" method="post">
 	{% csrf_token %}
 	{{ form.as_p }}

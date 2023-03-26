@@ -51,6 +51,7 @@ def editar_libro(request, id): # Vista de editar un libro
 				return redirect('libro', id=id)
 		ctx = {
 			'id': id,
+			'titulo': libro.titulo,
 			'form': LibroForm(initial={
 				'titulo': libro.titulo,
 				'autor': libro.autor,
@@ -61,6 +62,11 @@ def editar_libro(request, id): # Vista de editar un libro
 			}
 		)}
 		return render(request, 'editar_libro.html', ctx)
+
+def eliminar_libro(request, id): # Vista de eliminar un libro
+		libro = Libro.objects.get(id=id)
+		libro.delete()
+		return redirect('libros')
 
 def autores(request): # Vista general de autores
 		autores = Autor.objects.all().order_by('nombre')

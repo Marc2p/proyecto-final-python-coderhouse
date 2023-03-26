@@ -22,6 +22,7 @@
 				<td>{{ libro.fecha_publicacion }}</td>
 				<td>{{ libro.genero.all|join:", " }}</td>
 				<td>{{ libro.sinopsis }}</td>
+				<td><a href="{% url 'eliminar_libro' libro.id %}">Eliminar</a></td>
 			</tr>
 		</tbody>
 	</table>

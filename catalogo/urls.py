@@ -8,6 +8,7 @@ urlpatterns = [
     path('BuscarLibro', busqueda_libro, name="BuscarLibro"), # Vista de búsqueda de libros
     path('agregarLibro', agregar_libro, name="agregar_libro"),
     path('editarLibro/<int:id>', editar_libro, name="editar_libro"),
+    path('eliminarLibro/<int:id>', eliminar_libro, name="eliminar_libro"),
     path('autores', autores, name="autores"),
     path('autor/<int:id>', autor, name="autor"),
     path('agregarAutor', agregar_autor, name="agregar_autor"),
