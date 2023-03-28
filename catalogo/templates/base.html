@@ -23,6 +23,18 @@
 	<!-- Navigation-->
 	<nav class="navbar navbar-light bg-light static-top">
 		<div class="container">
+			<div class="dropdown">
+				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">Cuenta</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					{% if user.is_authenticated %}
+						<img src="{{ user.avatar.avatar.url }}" alt="Avatar de usuario" height="40 px">
+						<a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a>
+					{% else %}
+						<a class="dropdown-item" href="{% url 'signup' %}">Registrarse</a>
+						<a class="dropdown-item" href="{% url 'login' %}">Iniciar sesión</a>
+					{% endif %}
+				</div>
+			</div>
 			<a class="navbar-brand" href="{% url 'index' %}">Inicio</a>
 			<a class="btn btn-primary" href="{% url 'libros' %}">Libros en catálogo</a>
 			<a class="btn btn-primary" href="{% url 'autores' %}">Autores en catálogo</a>
