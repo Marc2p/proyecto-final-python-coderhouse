@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from catalogo.forms import *
 from catalogo.models import *
+from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
 
@@ -9,6 +10,7 @@ def context_processor(request):
 	ctx = {'buscar_libro': busquedaLibroForm(prefix='busqueda')}
 	return ctx
 
+@login_required
 def index(request): # Vista de inicio
 		cantidad_de_libros = Libro.objects.all().count()
 		cantidad_de_autores = Autor.objects.count()
@@ -35,6 +37,7 @@ def libro(request, id): # Vista de un libro en particular
 		ctx = {'libro': libro}
 		return render(request, 'libro.html', ctx)
 
+@permission_required('catalogo.change_libro')
 def editar_libro(request, id): # Vista de editar un libro
 		libro = Libro.objects.get(id=id)
 		if request.method == 'POST':
@@ -63,6 +66,7 @@ def editar_libro(request, id): # Vista de editar un libro
 		)}
 		return render(request, 'editar_libro.html', ctx)
 
+@permission_required('catalogo.delete_libro')
 def eliminar_libro(request, id): # Vista de eliminar un libro
 		libro = Libro.objects.get(id=id)
 		libro.delete()
@@ -102,6 +106,7 @@ def busqueda_libro(request): # Vista de busqueda de libros
 			ctx = {'paginador': libros}
 			return render(request, 'libros.html', ctx)
 
+@permission_required('catalogo.add_libro')
 def agregar_libro(request): # Vista de agregar un libro
 		if request.method == 'POST':
 			form = LibroForm(request.POST)
@@ -120,6 +125,7 @@ def agregar_libro(request): # Vista de agregar un libro
 		ctx = {'form': LibroForm}
 		return render(request, 'agregar_libro.html', ctx)
 
+@permission_required('catalogo.add_autor')
 def agregar_autor(request): # Vista de agregar un autor
 		if request.method == 'POST':
 			form = AutorForm(request.POST)
@@ -134,6 +140,7 @@ def agregar_autor(request): # Vista de agregar un autor
 		ctx = {'form': AutorForm}
 		return render(request, 'agregar_autor.html', ctx)
 
+@permission_required('catalogo.add_genero')
 def agregar_genero(request): # Vista de agregar un genero
 		if request.method == 'POST':
 			form = GeneroForm(request.POST)
@@ -147,6 +154,7 @@ def agregar_genero(request): # Vista de agregar un genero
 		ctx = {'form': GeneroForm}
 		return render(request, 'agregar_genero.html', ctx)
 
+@permission_required('catalogo.add_idioma')
 def agregar_idioma(request): # Vista de agregar un idioma
 		if request.method == 'POST':
 			form = IdiomaForm(request.POST)
