@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import login, logout, authenticate
-from account.forms import SignUpForm
+from account.forms import SignUpForm, EditProfileForm
 from account.models import Avatar
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+
+def is_staff(user):
+	return user.is_staff
 
 def signup_view(request):
 	if request.method == 'POST':
@@ -57,17 +61,51 @@ def login_view(request):
 		}
 		return render(request, 'account.html', ctx)
 
-# crear una vista para modificar un usuario, que solo pueda modificar su propio usuario. Si el método es POST, se debe validar el formulario y si es válido, se debe guardar el usuario y redirigir a la página de inicio. Si el método es GET, se debe mostrar el formulario con los datos del usuario.
-def update_user(request):
+@login_required
+def editar_perfil(request):
 	if request.method == 'POST':
-		form = SignUpForm(request.POST, request.FILES, instance=request.user)
+		form = EditProfileForm(request.POST, request.FILES, instance=request.user)
 		if form.is_valid():
-			form.save()
+			user = form.save()
+			if 'avatar' in request.FILES:
+				avatar = Avatar(user=user, avatar=request.FILES['avatar'])
+				avatar.save()
 			return redirect('index')
+		else:
+			ctx = {
+				'form': form,
+				'titulo': 'Editar perfil',
+				'enviar': 'Guardar',
+			}
+			return render(request, 'account.html', ctx)
 	else:
 		ctx = {
-			'form': SignUpForm(instance=request.user),
-			'titulo': 'Actualizar usuario',
-			'enviar': 'Actualizar',
+			'form': EditProfileForm(instance=request.user),
+			'titulo': 'Editar perfil',
+			'enviar': 'Guardar',
 		}
 		return render(request, 'account.html', ctx)
+
+@login_required
+def cambiar_password(request):
+	if request.method == 'POST':
+		form = PasswordChangeForm(request.user, request.POST)
+		if form.is_valid():
+			user = form.save()
+			login(request, user)
+			return redirect('index')
+		else:
+			ctx = {
+				'form': form,
+				'titulo': 'Cambiar contraseña',
+				'enviar': 'Guardar',
+			}
+			return render(request, 'account.html', ctx)
+	else:
+		ctx = {
+			'form': PasswordChangeForm(request.user),
+			'titulo': 'Cambiar contraseña',
+			'enviar': 'Guardar',
+		}
+		return render(request, 'account.html', ctx)
+

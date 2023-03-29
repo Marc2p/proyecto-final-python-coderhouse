@@ -6,4 +6,7 @@
 		{{ form.as_p }}
 		<input type="submit" value="{{ enviar }}">
 	</form>
+	{% if titulo == "Editar perfil" %}
+		<a href="{% url 'changepass' %}">Cambiar contraseña</a>
+	{% endif %}
 {% endblock %}
